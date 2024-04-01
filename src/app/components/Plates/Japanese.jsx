@@ -1,9 +1,19 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { Noto_Sans_JP } from 'next/font/google'
 
-export default function Japanese({ plateText, setPlateText}) {
+const noto = Noto_Sans_JP(
+    { subsets: ["latin"] },
+);
+
+
+
+export default function Japanese({ plateText, setPlateText }) {
     const [spoilerPrefecture, setSpoilerPrefecture] = useState(false)
     const [spoilerHiragana, setSpoilerHiragana] = useState(false)
+
+
+
 
 
 
@@ -18,14 +28,15 @@ export default function Japanese({ plateText, setPlateText}) {
         })
     }, [])
 
-    
+
 
     const changeColors = (color, type) => {
         switch (type) {
             case 'plate':
                 setPlateText({
                     ...plateText,
-                    bgColor: color
+                    bgColor: color,
+                    bgImage: ''
                 })
                 break
             case 'text':
@@ -43,15 +54,15 @@ export default function Japanese({ plateText, setPlateText}) {
 
 
     const symbols = [
-        {id: 'smile', value: '😊', label: 'Sonrisa'},
-        {id: 'heart', value: '❤️', label: 'Corazón'},
-        {id: 'star', value: '⭐', label: 'Estrella'},
-        {id: 'sun', value: '☀️', label: 'Sol'},
-        {id: 'cloud', value: '☁️', label: 'Nube'},
-        {id: 'umbrella', value: '☔', label: 'Paraguas'},
-        {id: 'snowflake', value: '❄️', label: 'Copo de nieve'},
-        {id: 'lightning', value: '⚡', label: 'Rayo'},
-        {id: 'droplet', value: '💧', label: 'Gotas'},
+        { id: 'smile', value: '😊', label: 'Sonrisa' },
+        { id: 'heart', value: '❤️', label: 'Corazón' },
+        { id: 'star', value: '⭐', label: 'Estrella' },
+        { id: 'sun', value: '☀️', label: 'Sol' },
+        { id: 'cloud', value: '☁️', label: 'Nube' },
+        { id: 'umbrella', value: '☔', label: 'Paraguas' },
+        { id: 'snowflake', value: '❄️', label: 'Copo de nieve' },
+        { id: 'lightning', value: '⚡', label: 'Rayo' },
+        { id: 'droplet', value: '💧', label: 'Gotas' },
     ]
 
 
@@ -143,20 +154,36 @@ export default function Japanese({ plateText, setPlateText}) {
         { id: 'Gray', value: '#808080', label: 'Gris' }
     ]
 
+    const backgroundImages = [
+        { id: 'gloss-black', file: 'gloss-black.jpg', name: 'Gloss Black' },
+        { id: 'gloss-blue', file: 'gloss-blue.jpg', name: 'Gloss Blue' },
+        { id: 'gloss-green', file: 'gloss-green.jpg', name: 'Gloss Green' },
+        { id: 'gloss-pink', file: 'gloss-pink.jpg', name: 'Gloss Pink' },
+        { id: 'gloss-red', file: 'gloss-red.jpg', name: 'Gloss Red' },
+        { id: 'matte-black', file: 'matte-black.jpg', name: 'Matte Black' },
+        { id: 'reflective-yellow', file: 'reflective-yellow.jpg', name: 'Reflective Yellow' },
+
+    ]
+
 
 
 
     return (
-        <div className='flex flex-row flex-wrap  px-4 py-4 gap-4 w-full justify-around'>
+        <div className={`flex flex-row flex-wrap  px-4 py-4 gap-4 w-full ${noto.className}`}>
 
-            <section className='md:w-2/4'>
+            <section className={`md:w-2/4 `}>
                 <h2 className='text-3xl py-2'>Matrícula japonesa</h2>
                 <div className={
-                    `flex flex-col border-4 px-2 border-black w-80 h-40 pointer-events-none items-center justify-center relative select-none`
+                    `mx-auto flex flex-col border-4 px-2 border-black w-80 h-40 pointer-events-none items-center justify-center relative select-none`
                 }
                     style={{
-                        backgroundColor: plateText.bgColor,
+                        backgroundColor: plateText.bgImage ? 'transparent' : plateText.bgColor,
                         color: plateText.textColor,
+                        backgroundImage: plateText.bgImage ? `url(/plates/${plateText.bgImage})` : 'none',
+                        backgroundSize: 'cover',
+                        backgroundRepeat: 'no-repeat',
+                        borderColor: plateText.bgImage ? 'transparent' : plateText.bgColor
+
                     }}
                 // Border from inside to simulate plate border using box-shadow
 
@@ -164,17 +191,19 @@ export default function Japanese({ plateText, setPlateText}) {
                 >
                     <div className='w-full flex flex-row items-center justify-center mb-4'>
                         <p>
-                            <span className='text-4xl'>{textOne}</span> <span className='text-4xl font-japanFont'>{textTwo}</span>
+                            <span className='text-4xl'>{textOne}</span>
+                            <span className='text-4xl tracking-tighter font-bold'>{textTwo}</span>
                         </p>
                     </div>
                     <div className='w-full flex flex-row items-center justify-center'>
                         <p>
-                            <span className='text-4xl'>{textThree}</span> <span className='text-6xl font-japanFont'>{textFour.toUpperCase()}</span>
+                            <span className='text-4xl'>{textThree}</span>
+                            <span className='text-6xl tracking-tighter font-bold'>{textFour.toUpperCase()}</span>
                         </p>
                     </div>
                 </div>
                 <form className='flex flex-col'>
-                    <div className='flex flex-row flex-wrap justify-between gap-4 py-4'>
+                    <div className='flex flex-row flex-wrap justify-start gap-4 py-4'>
                         <div className='flex flex-col gap-1 '>
                             <label htmlFor='topText' className='font-japanFont'>Texto superior</label>
                             <input
@@ -206,14 +235,35 @@ export default function Japanese({ plateText, setPlateText}) {
                                 } />
                         </div>
                     </div>
-                    <div className='flex flex-row flex-wrap gap-2'>
+                    <h3 className='text-xl mb-1'>Simbolos</h3>
+
+                    <div className='flex flex-row flex-wrap gap-2 items-center'>
                         {/* Japanase characters */}
+
+                        <span
+                            onClick={
+                                () => {
+
+                                    setPlateText({
+                                        ...plateText,
+                                        textThree: ''
+
+                                    })
+                                }
+                            }
+                            className='select-none text-xl py-2 px-1 text-black bg-white  border-[1px] border-black hover:cursor-pointer' >
+                            Quitar
+                        </span>
+
 
                         {
                             symbols.map((char, index) => (
                                 <span key={char.id}
                                     onClick={
                                         () => {
+                                            if (plateText.textThree.length >= 5) {
+                                                return
+                                            }
                                             setPlateText({
                                                 ...plateText,
                                                 textThree: char.value
@@ -221,7 +271,7 @@ export default function Japanese({ plateText, setPlateText}) {
                                             })
                                         }
                                     }
-                                    className='select-none text-2xl text-black bg-white py-2 px-3 border-[1px] border-black hover:cursor-pointer' >{char.value}</span>
+                                    className='select-none text-xl text-black bg-white py-2 px-3 border-[1px] border-black hover:cursor-pointer' >{char.value}</span>
                             ))
                         }
 
@@ -235,7 +285,7 @@ export default function Japanese({ plateText, setPlateText}) {
                 <div className='flex flex-row justify-between mb-4 items-center'>
                     <h2 className='text-xl'>Prefecture</h2>
                     <button
-                        className='bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 select-none'
+                        className='bg-gray-800 text-white px-3 py-2 rounded-md hover:bg-gray-900 select-none'
                         onClick={() => setSpoilerPrefecture(!spoilerPrefecture)}
                     >
                         {spoilerPrefecture ? 'Ver menos' : 'Ver más'}
@@ -271,7 +321,7 @@ export default function Japanese({ plateText, setPlateText}) {
                 <div className='flex flex-row justify-between my-4 items-center'>
                     <h2 className='text-xl'>Hiragana</h2>
                     <button
-                        className='bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600'
+                        className='bg-gray-800 text-white px-3 py-2 rounded-md hover:bg-gray-900 select-none'
                         onClick={() => setSpoilerHiragana(!spoilerHiragana)}
                     >
                         {spoilerHiragana ? 'Ver menos' : 'Ver más'}
@@ -331,6 +381,27 @@ export default function Japanese({ plateText, setPlateText}) {
                                     }}
 
 
+                                ></button>
+                            ))
+                        }
+                        {
+                            backgroundImages.map((image, index) => (
+                                <button key={index}
+                                    onClick={
+                                        () => {
+                                            setPlateText({
+                                                ...plateText,
+                                                bgImage: image.file
+                                            })
+                                        }
+                                    }
+                                    className='text-white px-3 py-2 w-8 h-8 rounded-sm  border-[1px] border-gray-800'
+                                    title={image.name}
+                                    style={{
+                                        backgroundImage: `url(/plates/${image.file})`,
+                                        backgroundSize: 'cover',
+                                        backgroundRepeat: 'no-repeat'
+                                    }}
                                 ></button>
                             ))
                         }

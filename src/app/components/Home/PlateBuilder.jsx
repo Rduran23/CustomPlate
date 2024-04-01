@@ -52,7 +52,7 @@ function PlateBuilder() {
             {/* Car picture and info */}
             <section className='w-full max-w-full border-b-[1px] border-gray-200 py-4'>
 
-                <article className="flex flex-row justify-evenly items-center  px-4 flex-wrap">
+                <article className="flex flex-row justify-evenly items-center  px-4 flex-wrap-reverse">
                     <Car plateText={plateText} />
                     <Banner />
                 </article>
